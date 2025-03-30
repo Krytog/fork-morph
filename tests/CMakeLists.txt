@@ -6,3 +6,8 @@ find_package(GTest REQUIRED)
 add_gtest(hello_world
     unit_helloworld.cpp
 )
+
+add_gtest(unit_manifestdiff
+    unit_manifestdiff.cpp
+    ${BASE_SRC_PATH}/ManifestDiff.cpp
+)
