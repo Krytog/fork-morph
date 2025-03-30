@@ -6,12 +6,19 @@
 
 namespace NManifest {
 
-/* Struct represents an interval [from, to) */
-struct Interval {
-    size_t from;
-    size_t to;
+enum class EAction {
+    DROP,
+    KEEP,
+    INSERT,
 };
 
-[[nodiscard]] std::vector<Interval> GetMismatchingIntervals(const Manifest& src, const Manifest& dst);
+struct DiffItem {
+    EAction action;
+    Manifest::const_iterator from;
+    Manifest::const_iterator to;
+};
+
+/* DiffItems contain iterators, so Manifests have to live as long as DiffItems do */
+[[nodiscard]] std::vector<DiffItem> GetManifestDiff(const Manifest& src, const Manifest& dst);
 
 }  // namespace NManifest
