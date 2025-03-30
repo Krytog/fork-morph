@@ -26,6 +26,7 @@ function(add_gtest TARGET)
 
     target_link_libraries(${TARGET} gmock)
     target_include_directories(${TARGET} PRIVATE ${BASE_SRC_PATH})
+    target_include_directories(${TARGET} PRIVATE ${BASE_3RDPARTY_PATH})
 endfunction()
 
 add_custom_target(test-all)
