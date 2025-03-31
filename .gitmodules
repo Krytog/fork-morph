@@ -1,3 +1,6 @@
 [submodule "3rdparty/diff"]
 	path = 3rdparty/diff
 	url = https://github.com/gritzko/myers-diff.git
+[submodule "3rdparty/fork-blob"]
+	path = 3rdparty/fork-blob
+	url = https://github.com/vikahse/fork-blob.git
