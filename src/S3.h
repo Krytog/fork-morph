@@ -5,11 +5,10 @@
 #include <aws/core/auth/AWSCredentials.h>
 
 #include <iostream>
-#include <vector>
 #include <string>
 
-std::vector<uint8_t> ReadPartialS3Object(const std::string& url, size_t offset, size_t size) {
-    std::vector<uint8_t> result;
+inline std::string ReadPartialS3Object(const std::string& url, size_t offset, size_t size) {
+    std::string result;
     
     std::string bucket, key;
     
@@ -27,8 +26,8 @@ std::vector<uint8_t> ReadPartialS3Object(const std::string& url, size_t offset, 
     clientConfig.verifySSL = false;
     
     Aws::Auth::AWSCredentials credentials;
-    credentials.SetAWSAccessKeyId("minioadmin"); // имя пользователя
-    credentials.SetAWSSecretKey("minioadmin");    // пароль
+    credentials.SetAWSAccessKeyId("minioadmin");
+    credentials.SetAWSSecretKey("minioadmin");
     
     Aws::S3::S3Client s3Client(credentials, clientConfig, Aws::Client::AWSAuthV4Signer::PayloadSigningPolicy::Never, false);
     
@@ -61,6 +60,10 @@ class S3Fetcher {
 public:
     S3Fetcher(const std::string& url) : url_(url) {
         Aws::InitAPI(options_);
+    }
+
+    std::string ReadChunk(size_t offset, size_t size) {
+        return ReadPartialS3Object(url_, offset, size);
     }
 
     ~S3Fetcher() {
