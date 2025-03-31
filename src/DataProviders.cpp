@@ -23,12 +23,12 @@ std::string FileChunkProvider::GetChunk(size_t from, size_t to) {
 
 
 
-S3ChunkProvider::S3ChunkProvider(const std::string& url) : url_(url) {
+S3ChunkProvider::S3ChunkProvider(const std::string& url) : fetcher_(url) {
 }
 
 std::string S3ChunkProvider::GetChunk(size_t from, size_t to) {
     const auto [offset, size] = GetSizeAndOffset(from, to);
-    const auto chunk = readPartialS3Object(url_, offset, size);
+    const auto chunk = fetcher_.ReadChunk(offset, size);
     std::string output;
     output.resize(chunk.size());
     std::memcpy(output.data(),chunk.data(), chunk.size());

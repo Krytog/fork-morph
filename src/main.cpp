@@ -22,7 +22,7 @@ std::unique_ptr<IChunkProvider> GetSrcBlobProvider(const std::string& path) {
 
 std::unique_ptr<IChunkProvider> GetDstBlobProvider(const std::string& path) {
     if (path.starts_with("S3@")) {
-        return std::make_unique<FileChunkProvider>(path.substr(3));
+        return std::make_unique<S3ChunkProvider>(path.substr(3));
     }
     return std::make_unique<FileChunkProvider>(path);
 }

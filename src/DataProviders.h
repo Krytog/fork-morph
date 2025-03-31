@@ -2,6 +2,7 @@
 
 #include <IChunkProvider.h>
 #include <FileReader.h>
+#include <S3.h>
 
 #include <string>
 
@@ -23,5 +24,5 @@ public:
     [[nodiscard]] std::string GetChunk(size_t from, size_t to) override;
 
 private:
-    const std::string url_;
+    S3Fetcher fetcher_;
 };
