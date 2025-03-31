@@ -2,6 +2,8 @@
 
 #include <Morph.h>
 
+#include <sstream>
+
 using namespace NMorph;
 using namespace NManifest;
 
@@ -101,4 +103,69 @@ TEST(Morph, MorphPlan4) {
     };
 
     ComparePlans(plan, expected);
+}
+
+class DummySrcProvider : public IChunkProvider {
+public:
+    [[nodiscard]] std::string GetChunk(size_t from, size_t to) override {
+        const size_t size = to - from;
+        std::string output;
+        output.resize(size, 's');
+        return output;
+    }
+};
+
+class DummyDstProvider : public IChunkProvider {
+public:
+    [[nodiscard]] std::string GetChunk(size_t from, size_t to) override {
+        const size_t size = to - from;
+        std::string output;
+        output.resize(size, 'd');
+        return output;
+    }
+};
+
+TEST(Morph, MorphBlob1) {
+    DummySrcProvider src;
+    DummyDstProvider dst;
+    const std::vector<ChunkDemand> plan = {
+        {0, 2, EDataSource::SRC},
+        {0, 5, EDataSource::DST},
+        {3, 9, EDataSource::SRC},
+    };
+    std::stringstream out;
+
+    MorphBlob(plan, &src, &dst, out);
+
+    const std::string expected = "ssdddddssssss";
+    EXPECT_EQ(out.str(), expected);
+}
+
+class DummySequentialProvider : public IChunkProvider {
+public:
+    [[nodiscard]] std::string GetChunk(size_t from, size_t to) override {
+        const size_t size = to - from;
+        std::string output;
+        output.reserve(size);
+        for (size_t i = from; i < to; ++i) {
+            output.push_back(static_cast<unsigned char>(i % 255));
+        }
+        return output;
+    }
+};
+
+TEST(Morph, MorphBlob2) {
+    DummySequentialProvider src;
+    DummySequentialProvider dst;
+    const std::vector<ChunkDemand> plan = {
+        {48, 58, EDataSource::SRC},
+        {65, 68, EDataSource::DST},
+        {97, 100, EDataSource::SRC},
+    };
+    std::stringstream out;
+
+    MorphBlob(plan, &src, &dst, out);
+
+    const std::string expected = "0123456789ABCabc";
+    EXPECT_EQ(out.str(), expected);
 }
