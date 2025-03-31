@@ -4,3 +4,6 @@
 [submodule "3rdparty/fork-blob"]
 	path = 3rdparty/fork-blob
 	url = https://github.com/vikahse/fork-blob.git
+[submodule "3rdparty/aws"]
+	path = 3rdparty/aws
+	url = https://github.com/aws/aws-sdk-cpp.git
