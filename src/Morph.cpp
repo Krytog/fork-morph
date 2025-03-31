@@ -51,4 +51,23 @@ std::vector<ChunkDemand> GetMorphPlan(const std::vector<NManifest::DiffItem>& di
     return optimized_plan;
 }
 
+void MorphBlob(const std::vector<ChunkDemand>& plan, IChunkProvider* src, IChunkProvider* dst,
+               std::ostream& out) {
+    for (const auto item : plan) {
+        IChunkProvider* data_provider = nullptr;
+        switch (item.source) {
+            case EDataSource::SRC: {
+                data_provider = src;
+                break;
+            }
+            case EDataSource::DST: {
+                data_provider = dst;
+                break;
+            }
+        }
+        const auto data = data_provider->GetChunk(item.interval.from, item.interval.to);
+        out << data;
+    }
+}
+
 }  // namespace NMorph
